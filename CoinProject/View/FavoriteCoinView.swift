@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FavoriteCoinView: View {
     var body: some View {
-        Text("Hello, World!")
+        
     }
 }
 
