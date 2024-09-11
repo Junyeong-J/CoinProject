@@ -29,5 +29,28 @@ struct CoinAPI {
             }
         }.resume()
     }
+    
+    static func fetchTopCoin(completion: @escaping (TopCoinsResponse?) -> Void) {
+        guard let url = URL(string: APIURL.topCoinURL) else { return }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data else {
+                print("No data or error: \(error?.localizedDescription ?? "Unknown error")")
+                completion(nil)
+                return
+            }
+            
+            do {
+                let decodedData = try JSONDecoder().decode(TopCoinsResponse.self, from: data)
+                DispatchQueue.main.async {
+                    completion(decodedData)
+                }
+            } catch {
+                print("Decoding error: \(error)")
+                completion(nil)
+            }
+        }.resume()
+    }
+
 }
 

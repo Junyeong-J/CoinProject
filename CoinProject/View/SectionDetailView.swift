@@ -12,7 +12,7 @@ struct SectionDetailView: View {
     var body: some View {
         ZStack(alignment: .leading){
             RoundedRectangle(cornerRadius: 20)
-                .fill(.gray)
+                .fill(Color.gray.opacity(0.1))
                 .frame(width: 200, height: 150)
                 .padding()
             VStack(alignment: .leading) {

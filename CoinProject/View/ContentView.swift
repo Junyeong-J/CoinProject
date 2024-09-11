@@ -17,7 +17,9 @@ struct MainView: View {
     @State private var text: String = ""
     
     @State private var list: [Sect] = [
-        Sect(section: "My Favorite")
+        Sect(section: "My Favorite"),
+        Sect(section: "Top 15 Coin"),
+        Sect(section: "Top 7 NFT")
     ]
     
     var body: some View {
@@ -39,11 +41,19 @@ struct MainView: View {
                 .bold()
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            HorizonSectionView()
+            if section.section.wrappedValue == "My Favorite" {
+                HorizonSectionView()
+            } else if section.section.wrappedValue == "Top 15 Coin" {
+                TopCoinSectionView()
+            } else if section.section.wrappedValue == "Top 7 NFT" {
+                TopNFTSectionView()
+            }
         }
+        .padding(.bottom, 20)
     }
     
 }
+
 
 #Preview {
     MainView()
