@@ -10,6 +10,7 @@ import SwiftUI
 struct CoinSearchView: View {
     
     @State private var searchText = ""
+    @State private var coinList: [Coin] = []
     
     var body: some View {
         NavigationView {
@@ -18,6 +19,11 @@ struct CoinSearchView: View {
             }
             .navigationTitle("Search")
         }
+        .task {
+            CoinAPI.fetchSearchCoin(completion: { value in
+                coinList = value.coins
+                })
+        }
         .searchable(text: $searchText,
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: "search")
@@ -25,18 +31,36 @@ struct CoinSearchView: View {
     
     private func listView() -> some View {
         LazyVStack{
-            ForEach(0..<10){ _ in
-                rowView()
+            ForEach(coinList, id: \.self){ data in
+                rowView(data)
             }
         }
     }
     
-    private func rowView() -> some View {
+    private func rowView(_ data: Coin) -> some View {
         HStack{
-            RandColorHeartView()
+            if let thumbURL = URL(string: data.thumb) {
+                AsyncImage(url: thumbURL) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                    case .failure:
+                        Image(systemName: "photo")
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+            } else {
+                Image(systemName: "photo")
+            }
             VStack(alignment: .leading) {
-                Text("Bitcoin")
-                Text("BTC")
+                Text(data.name)
+                Text(data.symbol)
             }
             Spacer()
             Image(systemName: "star")
